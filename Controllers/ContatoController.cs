@@ -15,7 +15,69 @@ namespace crud_back_end.Controllers{
         
         // [HttpGet]
         // public async Task<IEnumerable<Contato>> Get([FromRoute] string token) => await _context.contato.ToListAsync();
-        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetContatoById([FromRoute] string token, [FromRoute] int id){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var contato = await _context.contato.FindAsync(id);
+
+            return contato == null? NotFound(): Ok(contato);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] string token, int id){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var deletarContato = await _context.contato.FindAsync(id);
+
+            if(deletarContato == null){
+                return NotFound();
+            }
+
+            _context.contato.Remove(deletarContato);
+            await _context.SaveChangesAsync();
+            
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> Update([FromRoute] string token, int id, UpdateContatoDTO updateContato){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var contato = await _context.contato.FindAsync(id);
+
+            if (contato == null){
+                return NotFound();
+            }
+
+            contato.Nome = updateContato.Nome;
+            contato.Telefone = updateContato.Telefone;
+            contato.Email = updateContato.Email;
+            contato.Ativo = updateContato.Ativo;
+            contato.DataNascimento = updateContato.DataNascimento;
+            contato.DataEdicao = DateTime.UtcNow;
+
+            _context.Entry(contato).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(contato);
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(Contato), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -29,20 +91,6 @@ namespace crud_back_end.Controllers{
             var contatos = await _context.contato.Where(cont => cont.UsuarioId == valid_token[0].Id).ToListAsync();
 
             return Ok(contatos);
-        }
-
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetContatoById([FromRoute] string token, [FromRoute] int id){
-            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
-
-            if(valid_token.Count == 0){
-                return NotFound();
-            }
-
-            var contato = await _context.contato.FindAsync(id);
-
-            return contato == null? NotFound(): Ok(contato);
         }
 
         [HttpPost]
@@ -69,37 +117,6 @@ namespace crud_back_end.Controllers{
 
             return CreatedAtAction(nameof(GetContatoById), "Contato", new {token=token, id=contato.Id} , contato);
         }
-        // [HttpPost]
-        // public async Task<IActionResult> Create([FromRoute] string token){
-        //     var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
-            
-        //     Console.WriteLine("#######################################");
-        //     Console.WriteLine(valid_token);
-        //     Console.WriteLine("#######################################");
-        //     if (valid_token == null){
-        //         return NotFound();
-        //     }
-            
-
-        //     return 
-        // }
-        // [HttpPost]
-        // public async Task<IActionResult> Create(CreateContatoDTO createContato){
-        //     var contato = new Contato();
-
-        //     contato.Nome = createContato.Nome;
-        //     contato.Telefone = createContato.Telefone;
-        //     contato.Email = createContato.Email;
-        //     contato.Ativo = createContato.Ativo;
-        //     contato.DataNascimento = createContato.DataNascimento;
-        //     contato.DataCadastro = DateTime.UtcNow;
-        //     contato.DataEdicao = null;
-        //     contato.UsuarioId = ;
-
-        //     await _context.contato.AddAsync(contato);
-        //     await _context.SaveChangesAsync();
-
-        //     return;
-        // }
+        
     }
 }
