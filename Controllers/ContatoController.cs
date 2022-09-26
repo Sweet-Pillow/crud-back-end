@@ -72,7 +72,6 @@ namespace crud_back_end.Controllers{
             contato.DataNascimento = updateContato.DataNascimento;
             contato.DataEdicao = DateTime.UtcNow;
 
-            _context.Entry(contato).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(contato);
