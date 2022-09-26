@@ -19,6 +19,6 @@ namespace crud_back_end.Models{
         public DateTime? FimAtendimento { get; set; }
         
         [Column("assunto")]
-        public string? assunto { get; set; }
+        public string? Assunto { get; set; }
     }
 }

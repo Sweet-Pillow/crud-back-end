@@ -12,8 +12,11 @@ namespace crud_back_end.Controllers{
         private readonly AppDbContext _context;
         public TelefoneController(AppDbContext context) => _context = context;
         
+        // [HttpGet("chamada-em-andamento")]
+        // public async Task<IActionResult> 
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> ChamadaEmAndamento([FromRoute] string token, int id){
+        public async Task<IActionResult> GetChamadaById([FromRoute] string token, int id){
             var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
 
             if(valid_token.Count == 0){
@@ -68,8 +71,23 @@ namespace crud_back_end.Controllers{
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] string token, int id){
+        public async Task<IActionResult> Update([FromRoute] string token, int id, UpdateChamadaDTO updateChamada){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var chamada = await _context.historico_ligacao.FindAsync(id);
+
+            if(chamada == null){
+                return NotFound();
+            }
             
+            chamada.FimAtendimento = DateTime.UtcNow;
+            chamada.Assunto = updateChamada.Assunto;
+            
+            return Ok(chamada);
         }
     }
 }
