@@ -67,10 +67,6 @@ namespace crud_back_end.Controllers{
             await _context.contato.AddAsync(contato);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("#######################################");
-            Console.WriteLine(contato.Id);
-            Console.WriteLine("#######################################");
-
             return CreatedAtAction(nameof(GetContatoById), "Contato", new {token=token, id=contato.Id} , contato);
         }
         // [HttpPost]
