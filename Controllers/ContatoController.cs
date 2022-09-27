@@ -81,13 +81,13 @@ namespace crud_back_end.Controllers{
         [ProducesResponseType(typeof(Contato), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetContato([FromRoute] string token){
-            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+            var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
 
-            if(valid_token.Count == 0){
+            if(valid_token == null){
                 return NotFound();
             }
 
-            var contatos = await _context.contato.Where(cont => cont.UsuarioId == valid_token[0].Id).ToListAsync();
+            var contatos = await _context.contato.Where(cont => cont.UsuarioId == valid_token.Id).ToListAsync();
 
             return Ok(contatos);
         }
