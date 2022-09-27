@@ -25,6 +25,8 @@ namespace crud_back_end.Controllers{
             return Ok(listaChamadas);
         }
 
+        // [HttpGet("")]
+
         [HttpGet("chamada-em-andamento")]
         public async Task<IActionResult> GetChamadaEmAndamento([FromRoute] string token){
             var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
@@ -33,7 +35,7 @@ namespace crud_back_end.Controllers{
                 return NotFound();
             }
 
-            var VerificarChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).ToListAsync();
+            var VerificarChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).Include(h => h.Contato).ToListAsync();
 
             if(VerificarChamada.Count == 0){
                 return NotFound();
@@ -74,10 +76,10 @@ namespace crud_back_end.Controllers{
                 return NotFound("Contato não encontrado");
             }
 
-            var ocorrendoChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).ToListAsync();
+            var ocorrendoChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).FirstOrDefaultAsync();
 
-            if (ocorrendoChamada.Count != 0){
-                return BadRequest("Você já está em ligação com " );
+            if (ocorrendoChamada != null){
+                return BadRequest("Você já está em ligação");
             }
 
             var chamada = new HistoricoLigacao();
@@ -94,16 +96,16 @@ namespace crud_back_end.Controllers{
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] string token, int id, UpdateChamadaDTO updateChamada){
-            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+            var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
 
-            if(valid_token.Count == 0){
+            if(valid_token == null){
                 return NotFound();
             }
 
             var chamada = await _context.historico_ligacao.FindAsync(id);
 
             if(chamada == null){
-                return NotFound("Chamada não encontrada");
+                return NotFound();
             }
             
             var chamadaEmAndamento = await _context.historico_ligacao.Where(hist => (hist.InicioAtendimento != null && hist.FimAtendimento == null)).FirstOrDefaultAsync();
