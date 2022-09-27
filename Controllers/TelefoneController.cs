@@ -11,9 +11,36 @@ namespace crud_back_end.Controllers{
     public class TelefoneController : ControllerBase {
         private readonly AppDbContext _context;
         public TelefoneController(AppDbContext context) => _context = context;
-        
-        // [HttpGet("chamada-em-andamento")]
-        // public async Task<IActionResult> 
+
+        [HttpGet]
+        public async Task<IActionResult> GetChamadas([FromRoute] string token){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var listaChamadas = await _context.historico_ligacao.Include(h => h.Contato).ToListAsync();
+
+            return Ok(listaChamadas);
+        }
+
+        [HttpGet("chamada-em-andamento")]
+        public async Task<IActionResult> GetChamadaEmAndamento([FromRoute] string token){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+
+            if(valid_token.Count == 0){
+                return NotFound();
+            }
+
+            var VerificarChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).ToListAsync();
+
+            if(VerificarChamada.Count == 0){
+                return NotFound();
+            }
+
+            return Ok(VerificarChamada);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetChamadaById([FromRoute] string token, int id){
@@ -23,16 +50,10 @@ namespace crud_back_end.Controllers{
                 return NotFound();
             }
 
-            var contato = await _context.contato.FindAsync(id);
-
-            if (contato == null){
-                return NotFound();
-            }
-
-            var chamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null).ToListAsync();
-
-            if(chamada == null){
-                return NotFound();
+            var chamada = await _context.historico_ligacao.Where(hist => hist.Id == id).ToListAsync();
+            
+            if(chamada.Count == 0){
+                return NotFound("Ligação não localizada ");
             }
 
             return Ok(chamada);
@@ -50,13 +71,13 @@ namespace crud_back_end.Controllers{
             var contato = await _context.contato.FindAsync(createChamada.idContato);
 
             if(contato == null){
-                return NotFound();
+                return NotFound("Contato não encontrado");
             }
 
-            var ocorrendoChamada = await _context.historico_ligacao.Where(hist => hist.ContatoId == contato.Id).ToListAsync();
+            var ocorrendoChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).ToListAsync();
 
-            if (ocorrendoChamada != null){
-                return BadRequest("Você já está em ligação com " + contato.Nome);
+            if (ocorrendoChamada.Count != 0){
+                return BadRequest("Você já está em ligação com " );
             }
 
             var chamada = new HistoricoLigacao();
@@ -66,6 +87,7 @@ namespace crud_back_end.Controllers{
 
             await _context.historico_ligacao.AddAsync(chamada);
             await _context.SaveChangesAsync();
+            chamada.Contato = contato;
 
             return Ok(chamada);
         }
@@ -81,11 +103,23 @@ namespace crud_back_end.Controllers{
             var chamada = await _context.historico_ligacao.FindAsync(id);
 
             if(chamada == null){
-                return NotFound();
+                return NotFound("Chamada não encontrada");
             }
             
+            var chamadaEmAndamento = await _context.historico_ligacao.Where(hist => (hist.InicioAtendimento != null && hist.FimAtendimento == null)).FirstOrDefaultAsync();
+
+            if(chamadaEmAndamento == null){
+                return NotFound();
+            }
+
+            if(chamadaEmAndamento.Id != chamada.Id){
+                return NotFound("Contato não possui chamada em andamento");
+            }
+
             chamada.FimAtendimento = DateTime.UtcNow;
             chamada.Assunto = updateChamada.Assunto;
+
+            await _context.SaveChangesAsync();
             
             return Ok(chamada);
         }
