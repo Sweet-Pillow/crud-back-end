@@ -52,6 +52,8 @@ C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Microsoft.VisualStudio.Web.Cod
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Npgsql.dll
+C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\NuGet.Common.dll
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\NuGet.Configuration.dll
 C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\NuGet.DependencyResolver.Core.dll
@@ -260,5 +262,3 @@ C:\Users\danie\git\crud-back-end\obj\Debug\net6.0\refint\crud-back-end.dll
 C:\Users\danie\git\crud-back-end\obj\Debug\net6.0\crud-back-end.pdb
 C:\Users\danie\git\crud-back-end\obj\Debug\net6.0\crud-back-end.genruntimeconfig.cache
 C:\Users\danie\git\crud-back-end\obj\Debug\net6.0\ref\crud-back-end.dll
-C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Npgsql.dll
-C:\Users\danie\git\crud-back-end\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

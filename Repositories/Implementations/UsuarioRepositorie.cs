@@ -26,5 +26,12 @@ namespace crud_back_end.Repositories.Implementations
 
             return usuario;
         }
+
+        public async Task<IEnumerable<Usuario>> GetUsuariosAsync() 
+        {
+            var listaUsuarios = _context.usuario.ToList();
+
+            return listaUsuarios;
+        }
     }
 }
