@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using crud_back_end.Data;
+using crud_back_end.Repositories.Implementations;
+using crud_back_end.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IUsuarioRepositorie, UsuarioRepositorie>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

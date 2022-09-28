@@ -12,20 +12,38 @@ namespace crud_back_end.Controllers{
         private readonly AppDbContext _context;
         public TelefoneController(AppDbContext context) => _context = context;
 
-        [HttpGet]
-        public async Task<IActionResult> GetChamadas([FromRoute] string token){
-            var valid_token = await _context.usuario.Where(user => user.Token == token).ToListAsync();
+        // [HttpGet]
+        // public async Task<IActionResult> GetChamadas([FromRoute] string token){
+        //     var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
 
-            if(valid_token.Count == 0){
+        //     if(valid_token == null){
+        //         return NotFound();
+        //     }
+
+        //     var listaChamadas = await _context.historico_ligacao.Include(h => h.Contato).ToListAsync();
+
+        //     return Ok(listaChamadas);
+        // }
+
+        [HttpGet("contato/{idContato}")]
+        public async Task<IActionResult> GetChamadaByIdContato([FromRoute] string token, [FromRoute] int idContato){
+            var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
+
+            if(valid_token == null){
                 return NotFound();
             }
 
-            var listaChamadas = await _context.historico_ligacao.Include(h => h.Contato).ToListAsync();
+            var contato = await _context.contato.FindAsync(idContato);
 
-            return Ok(listaChamadas);
+            if(contato == null){
+                return NotFound("Contato nao encontrado");
+            }
+
+            var chamadasContato = await _context.historico_ligacao.Where(hist => hist.ContatoId == idContato).Include(cont => cont.Contato).ToListAsync();
+
+            return Ok(chamadasContato);
         }
 
-        // [HttpGet("")]
 
         [HttpGet("chamada-em-andamento")]
         public async Task<IActionResult> GetChamadaEmAndamento([FromRoute] string token){
