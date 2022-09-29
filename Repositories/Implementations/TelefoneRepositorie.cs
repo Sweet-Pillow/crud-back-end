@@ -42,7 +42,7 @@ namespace crud_back_end.Repositories.Implementations
                 return null;
             }
 
-            var listaChamadas = await _context.historico_ligacao.Include(h => h.Contato).ToListAsync();
+            var listaChamadas = _context.historico_ligacao.Include(h => h.Contato).ToList();
 
             return listaChamadas;
         }
@@ -61,6 +61,40 @@ namespace crud_back_end.Repositories.Implementations
             if(chamada == null){
                 return null;
             }
+
+            return chamada;
+        }
+
+        public async Task<HistoricoLigacao> CreateChamadaAsync(string token, CreateChamadaDTO createChamada)
+        {
+            var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
+
+            if (valid_token == null)
+            {
+                return null;
+            }
+
+            var contato = await _context.contato.FindAsync(createChamada.idContato);
+
+            if(contato == null){
+                return null;
+            }
+
+            var ocorrendoChamada = await _context.historico_ligacao.Where(hist => hist.InicioAtendimento != null && hist.FimAtendimento == null).FirstOrDefaultAsync();
+
+            if (ocorrendoChamada != null){
+                return null;
+            }
+
+            var chamada = new HistoricoLigacao();
+
+            chamada.ContatoId = createChamada.idContato;
+            chamada.InicioAtendimento = DateTime.UtcNow;
+
+            await _context.historico_ligacao.AddAsync(chamada);
+            await _context.SaveChangesAsync();
+
+            chamada.Contato = contato;
 
             return chamada;
         }
