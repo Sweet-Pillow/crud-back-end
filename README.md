@@ -4,15 +4,15 @@ CRUD feito em C# que provê metodos de gerenciamento de uma agenda de contatos e
 
 ## Template
 
-![image](https://github.com/Sweet-Pillow/crud-back-end/blob/master/Template.PNG)
+![image](https://github.com/Sweet-Pillow/crud-back-end/blob/main/Template.PNG)
 
 ## Contato
 
-![image](https://github.com/Sweet-Pillow/crud-back-end/blob/master/Contato.PNG)
+![image](https://github.com/Sweet-Pillow/crud-back-end/blob/main/Contato.PNG)
 
 ## Telefone
 
-![image](https://github.com/Sweet-Pillow/crud-back-end/blob/master/Telefone.PNG)
+![image](https://github.com/Sweet-Pillow/crud-back-end/blob/main/Telefone.PNG)
 
 ## Usuario
-![image](https://github.com/Sweet-Pillow/crud-back-end/blob/master/Usuario.PNG)
+![image](https://github.com/Sweet-Pillow/crud-back-end/blob/main/Usuario.PNG)
