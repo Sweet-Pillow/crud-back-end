@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IUsuarioRepositorie, UsuarioRepositorie>();
 builder.Services.AddScoped<IContatoRepositorie, ContatoRepositorie>();
+builder.Services.AddScoped<ITelefoneRepositorie, TelefoneRepositorie>();
 
 
 builder.Services.AddControllers();
