@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using crud_back_end.Data;
 using crud_back_end.Models;
 using crud_back_end.DTOs;
-using crud_back_end.Repositories.Implementations;
 using crud_back_end.Repositories.Interfaces;
 
 namespace crud_back_end.Controllers{
