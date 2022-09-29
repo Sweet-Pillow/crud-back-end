@@ -14,6 +14,25 @@ namespace crud_back_end.Repositories.Implementations
             _context = context;
         }
 
+        public async Task<Contato> GetContatoByIdAsync(string token, int id)
+        {
+            var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
+
+            if (valid_token == null)
+            {
+                return null;
+            }
+
+            var contato = await _context.contato.FindAsync(id);
+
+            if (contato == null)
+            {
+                return null;
+            }
+            return contato;
+            
+        }
+
         public async Task<IEnumerable<Contato>> GetContatosAsync(string token) 
         {
             var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
@@ -28,7 +47,8 @@ namespace crud_back_end.Repositories.Implementations
             return listaContatos;
         }
 
-        public async Task<Contato> CreateContatoAsync(CreateContatoDTO createContato, string token){
+        public async Task<Contato> CreateContatoAsync(CreateContatoDTO createContato, string token)
+        {
             var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
 
             if (valid_token == null)

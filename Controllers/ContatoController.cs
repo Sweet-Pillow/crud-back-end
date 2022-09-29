@@ -30,6 +30,25 @@ namespace crud_back_end.Controllers{
 
         //     return contato == null? NotFound(): Ok(contato);
         // }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Contato>> GetContatoById([FromRoute] string token, [FromRoute] int id)
+        {
+            try
+            {
+                var contato = await _contatoRepositorie.GetContatoByIdAsync(token, id);
+
+                if (contato == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(contato);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
         // [HttpDelete("{id}")]
         // [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -94,8 +113,10 @@ namespace crud_back_end.Controllers{
 
         //     return Ok(contatos);
         // }
+
         [HttpGet]
-        public async Task<ActionResult<Contato>> GetContatos([FromRoute] string token){
+        public async Task<ActionResult<Contato>> GetContatos([FromRoute] string token)
+        {
             try 
             {
                 var listaContatos = await _contatoRepositorie.GetContatosAsync(token);
