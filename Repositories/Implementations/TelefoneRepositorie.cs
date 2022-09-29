@@ -98,5 +98,37 @@ namespace crud_back_end.Repositories.Implementations
 
             return chamada;
         }
+
+        public async Task<HistoricoLigacao> UpdateChamadaAsync(string token, int id, UpdateChamadaDTO updateChamada)
+        {
+            var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
+
+            if(valid_token == null){
+                return null;
+            }
+
+            var chamada = await _context.historico_ligacao.FindAsync(id);
+
+            if(chamada == null){
+                return null;
+            }
+            
+            var chamadaEmAndamento = await _context.historico_ligacao.Where(hist => (hist.InicioAtendimento != null && hist.FimAtendimento == null)).FirstOrDefaultAsync();
+
+            if(chamadaEmAndamento == null){
+                return null;
+            }
+
+            if(chamadaEmAndamento.Id != chamada.Id){
+                return null;
+            }
+
+            chamada.FimAtendimento = DateTime.UtcNow;
+            chamada.Assunto = updateChamada.Assunto;
+
+            await _context.SaveChangesAsync();
+            
+            return chamada;
+        }
     }
 }

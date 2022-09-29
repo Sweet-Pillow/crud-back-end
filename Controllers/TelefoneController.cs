@@ -191,6 +191,25 @@ namespace crud_back_end.Controllers{
         //     return Ok(chamada);
         // }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<HistoricoLigacao>> UpdateChamada([FromRoute] string token, int id, UpdateChamadaDTO updateChamada)
+        {
+            try
+            {
+                var chamada = await _telefoneRepositorie.UpdateChamadaAsync(token, id, updateChamada);
+
+                if (chamada == null)
+                {
+                    return null;
+                }
+
+                return Ok(chamada);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
         // [HttpPut("{id}")]
         // public async Task<IActionResult> Update([FromRoute] string token, int id, UpdateChamadaDTO updateChamada){
         //     var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
