@@ -71,6 +71,26 @@ namespace crud_back_end.Controllers{
             
         //     return NoContent();
         // }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteContato([FromRoute] string token, [FromRoute] int id)
+        {
+            try
+            {
+                var contato = await _contatoRepositorie.DeleteContatoAsync(token, id);
+
+                if (contato == null)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
         // [HttpPut("{id}")]
 

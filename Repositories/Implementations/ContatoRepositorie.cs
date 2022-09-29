@@ -98,5 +98,26 @@ namespace crud_back_end.Repositories.Implementations
 
             return contato;
         }
+
+        public async Task<Contato> DeleteContatoAsync(string token, int id)
+        {
+            var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
+
+            if (valid_token == null)
+            {
+                return null;
+            }
+
+            var contato = await _context.contato.FindAsync(id);
+
+            if (contato == null){
+                return null;
+            }
+
+            _context.contato.Remove(contato);
+            await _context.SaveChangesAsync();
+
+            return contato;
+        }
     }
 }
