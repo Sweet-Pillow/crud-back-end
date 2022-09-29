@@ -8,5 +8,6 @@ namespace crud_back_end.Repositories.Interfaces
         public Task<Contato> GetContatoByIdAsync(string token, int id);
         public Task<IEnumerable<Contato>> GetContatosAsync(string token);
         public Task<Contato> CreateContatoAsync(CreateContatoDTO createUserDTO, string token);
+        public Task<Contato> UpdateContatoAsync(string token, int id, UpdateContatoDTO updateContato);
     }
 }

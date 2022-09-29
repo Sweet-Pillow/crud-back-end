@@ -30,7 +30,7 @@ namespace crud_back_end.Repositories.Implementations
                 return null;
             }
             return contato;
-            
+
         }
 
         public async Task<IEnumerable<Contato>> GetContatosAsync(string token) 
@@ -67,6 +67,33 @@ namespace crud_back_end.Repositories.Implementations
             contato.UsuarioId = valid_token.Id;
 
             await _context.contato.AddAsync(contato);
+            await _context.SaveChangesAsync();
+
+            return contato;
+        }
+
+        public async Task<Contato> UpdateContatoAsync(string token, int id, UpdateContatoDTO updateContato)
+        {
+            var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
+
+            if (valid_token == null)
+            {
+                return null;
+            }
+
+            var contato = await _context.contato.FindAsync(id);
+
+            if (contato == null){
+                return null;
+            }
+
+            contato.Nome = updateContato.Nome;
+            contato.Telefone = updateContato.Telefone;
+            contato.Email = updateContato.Email;
+            contato.Ativo = updateContato.Ativo;
+            contato.DataNascimento = updateContato.DataNascimento;
+            contato.DataEdicao = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
 
             return contato;

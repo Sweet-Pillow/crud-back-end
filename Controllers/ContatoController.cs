@@ -99,6 +99,26 @@ namespace crud_back_end.Controllers{
         //     return Ok(contato);
         // }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Contato>> UpdateContato([FromRoute] string token, int id, UpdateContatoDTO updateContato)
+        {
+            try
+            {
+                var contato = await _contatoRepositorie.UpdateContatoAsync(token, id, updateContato);
+
+                if (contato == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(contato);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // [HttpGet]
         // [ProducesResponseType(typeof(Contato), StatusCodes.Status200OK)]
         // [ProducesResponseType(StatusCodes.Status404NotFound)]
