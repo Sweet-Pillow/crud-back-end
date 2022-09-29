@@ -99,6 +99,12 @@ namespace crud_back_end.Controllers{
             try 
             {
                 var listaContatos = await _contatoRepositorie.GetContatosAsync(token);
+
+                if(listaContatos == null)
+                {
+                    return NotFound();
+                }
+                
                 return Ok(listaContatos);
             }
             catch (Exception ex )
@@ -131,6 +137,23 @@ namespace crud_back_end.Controllers{
 
         //     return CreatedAtAction(nameof(GetContatoById), "Contato", new {token=token, id=contato.Id} , contato);
         // }
-        
+        [HttpPost]
+        public async Task<ActionResult<Contato>> CreateContato([FromRoute] string token, CreateContatoDTO createContato){
+            try
+            {
+                var contato = await _contatoRepositorie.CreateContatoAsync(createContato, token);
+                
+                if (contato == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(contato);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

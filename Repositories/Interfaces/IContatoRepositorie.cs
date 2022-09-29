@@ -5,7 +5,7 @@ namespace crud_back_end.Repositories.Interfaces
 {
     public interface IContatoRepositorie
     {
-        // public Task<Contato> CreateAsync(CreateContatoDTO createUserDTO);
+        public Task<Contato> CreateContatoAsync(CreateContatoDTO createUserDTO, string token);
         public Task<IEnumerable<Contato>> GetContatosAsync(string token);
     }
 }
