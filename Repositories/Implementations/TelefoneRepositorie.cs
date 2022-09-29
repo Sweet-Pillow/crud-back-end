@@ -65,6 +65,25 @@ namespace crud_back_end.Repositories.Implementations
             return chamada;
         }
 
+        public async Task<IEnumerable<HistoricoLigacao>> GetChamadaByContatoIdAsync(string token, int idContato)
+        {
+            var valid_token = await _context.usuario.Where(user => user.Token == token).FirstOrDefaultAsync();
+
+            if(valid_token == null){
+                return null;
+            }
+
+            var contato = await _context.contato.FindAsync(idContato);
+
+            if(contato == null){
+                return null;
+            }
+
+            var chamadasContato = await _context.historico_ligacao.Where(hist => hist.ContatoId == idContato).Include(cont => cont.Contato).ToListAsync();
+
+            return chamadasContato;
+        }
+
         public async Task<HistoricoLigacao> CreateChamadaAsync(string token, CreateChamadaDTO createChamada)
         {
             var valid_token = _context.usuario.Where(u => u.Token == token).FirstOrDefault();
